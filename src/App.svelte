@@ -1,5 +1,5 @@
 <script lang="ts">
-  import ThreeCanvas from "./lib/ThreeCanvas.svelte";
+  import ThreeCanvas from "./lib/components/ThreeCanvas.svelte";
 </script>
 
 <main>
