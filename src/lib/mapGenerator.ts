@@ -5,6 +5,7 @@ type Mesh = {
     vertices: Float32Array;
     normals: Float32Array;
     colors: Float32Array;
+    indices: number[];
 }
 
 const colorFromZ = (z: number, maxAmplitude: number): [number, number, number] => {
@@ -22,17 +23,19 @@ const colorFromZ = (z: number, maxAmplitude: number): [number, number, number] =
 export const generate = (width: number, height: number, step: number, maxAmplitude: number): Mesh => {
     const noise = new Perlin(42);
     const size = (width + 1) * (height + 1) * 3;
+
     const vertices = new Float32Array(size);
     const colors = new Float32Array(size);
-    let idx = 0;
+    const normals = new Float32Array(size);
+    const indices = [];
 
     const octaveCount = 4;
     const persistence = 0.5; //(0,1)
     const lacunarity = 2; //( > 1)
-    for (let x = 0; x <= width; x++) {
-        for (let y = 0; y <= height; y++) {
-            // const z = noise.perlin2(x * step, y * step);
+    for (let x = 0, idx = 0; x <= width; x++) {
+        for (let y = 0; y <= height; y++, idx += 3) {
 
+            /* Noise */
             let z = noise.perlin2(x * step, y * step);
             let frequency = step;
             let amplitude = maxAmplitude;
@@ -43,21 +46,39 @@ export const generate = (width: number, height: number, step: number, maxAmplitu
                 frequency *= lacunarity;
             }
 
+            /* Vertices */
             vertices[idx] = (x - width / 2);
             vertices[idx + 1] = z;
             vertices[idx + 2] = (y - height / 2);
 
-            const [r, g, b] = colorFromZ(z, maxAmplitude)
-            colors[idx] = r;
-            colors[idx + 1] = g;
-            colors[idx + 2] = b;
-            idx += 3;
+            /* Colors */
+            const [red, green, blue] = colorFromZ(z, maxAmplitude)
+            colors[idx] = red;
+            colors[idx + 1] = green;
+            colors[idx + 2] = blue;
+
+            /* Normals */
+            normals[idx] = 0;
+            normals[idx + 1] = 0;
+            normals[idx + 2] = 1;
+
+            /* Indices */
+            if (y < height && x < width) {
+                const a = x * (height + 1) + (y + 1);
+                const b = x * (height + 1) + y;
+                const c = (x + 1) * (height + 1) + y;
+                const d = (x + 1) * (height + 1) + (y + 1);
+
+                indices.push(a, b, d); // face one
+                indices.push(b, c, d); // face two
+            }
         }
     }
 
     return {
         vertices,
-        normals: new Float32Array(width * height * 3),
+        normals,
         colors,
+        indices,
     }
 }
