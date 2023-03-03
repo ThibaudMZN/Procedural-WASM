@@ -1,10 +1,12 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-import { generate } from "./mapGenerator";
+import type { Mesh } from "./mapGenerator";
 
 let renderer: THREE.WebGLRenderer;
 let controls: OrbitControls;
 let pointLight: THREE.PointLight;
+let mesh: THREE.Mesh;
+
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(
     75,
@@ -13,22 +15,13 @@ const camera = new THREE.PerspectiveCamera(
     1000
 );
 
-const geometry = new THREE.BufferGeometry();
-const map = generate(100, 100, 1 / 50, 20);
-
-//
-geometry.setIndex(map.indices);
-geometry.setAttribute('position', new THREE.Float32BufferAttribute(map.vertices, 3));
-geometry.setAttribute('normal', new THREE.Float32BufferAttribute(map.normals, 3));
-geometry.setAttribute('color', new THREE.Float32BufferAttribute(map.colors, 3));
-
 const material = new THREE.MeshPhongMaterial({
     side: THREE.DoubleSide,
     vertexColors: true
 });
-
-const mesh = new THREE.Mesh(geometry, material);
-scene.add(mesh);
+const geometry = new THREE.BufferGeometry();
+const meshObj = new THREE.Mesh(geometry, material);
+scene.add(meshObj);
 
 const light = new THREE.AmbientLight(0x404040, 1);
 pointLight = new THREE.PointLight(0xffffff, 2, 200);
@@ -57,5 +50,12 @@ export const createThreeScene = (canvas: HTMLCanvasElement) => {
     resize();
     animate();
 };
+
+export const updateMesh = (mesh: Mesh) => {
+    geometry.setIndex(mesh.indices);
+    geometry.setAttribute('position', new THREE.Float32BufferAttribute(mesh.vertices, 3));
+    geometry.setAttribute('normal', new THREE.Float32BufferAttribute(mesh.normals, 3));
+    geometry.setAttribute('color', new THREE.Float32BufferAttribute(mesh.colors, 3));
+}
 
 window.addEventListener("resize", resize);

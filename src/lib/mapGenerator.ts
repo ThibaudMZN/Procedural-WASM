@@ -1,7 +1,7 @@
 import Perlin from "./perlin";
 
 
-type Mesh = {
+export type Mesh = {
     vertices: Float32Array;
     normals: Float32Array;
     colors: Float32Array;
@@ -20,7 +20,15 @@ const colorFromZ = (z: number, maxAmplitude: number): [number, number, number] =
     return [1.0, 1.0, 1.0];
 };
 
-export const generate = (width: number, height: number, step: number, maxAmplitude: number): Mesh => {
+export const generate = (
+    width: number,
+    height: number,
+    step: number,
+    maxAmplitude: number,
+    octaveCount: number,
+    persistence: number,
+    lacunarity: number
+): Mesh => {
     const noise = new Perlin(42);
     const size = (width + 1) * (height + 1) * 3;
 
@@ -29,9 +37,6 @@ export const generate = (width: number, height: number, step: number, maxAmplitu
     const normals = new Float32Array(size);
     const indices = [];
 
-    const octaveCount = 4;
-    const persistence = 0.5; //(0,1)
-    const lacunarity = 2; //( > 1)
     for (let x = 0, idx = 0; x <= width; x++) {
         for (let y = 0; y <= height; y++, idx += 3) {
 
