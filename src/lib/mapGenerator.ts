@@ -1,5 +1,5 @@
 import Perlin from "./perlin";
-
+import { goPerlin } from "./wasm";
 
 export type Mesh = {
     vertices: Float32Array;
@@ -15,7 +15,6 @@ const colorFromZ = (z: number, maxAmplitude: number): [number, number, number] =
     else if (z < -0.1 * maxAmplitude) return [194 / 255, 188 / 255, 10 / 255];
     else if (z < 0.3 * maxAmplitude) return [29 / 255, 163 / 255, 8 / 255];
     else if (z < 0.4 * maxAmplitude) return [79 / 255, 42 / 255, 4 / 255];
-
 
     return [1.0, 1.0, 1.0];
 };
@@ -37,16 +36,20 @@ export const generate = (
     const normals = new Float32Array(size);
     const indices = [];
 
+    goPerlin.NewPerlin(42)
+
     for (let x = 0, idx = 0; x <= width; x++) {
         for (let y = 0; y <= height; y++, idx += 3) {
 
             /* Noise */
-            let z = noise.perlin2(x * step, y * step);
+            // let z = noise.perlin2(x * step, y * step);
+            let z = goPerlin.Perlin(x * step, y*step);
             let frequency = step;
             let amplitude = maxAmplitude;
 
             for (let i = 0; i < octaveCount; i++) {
-                z += amplitude * noise.perlin2(x * frequency, y * frequency);
+                z += amplitude * goPerlin.Perlin(x * frequency, y * frequency);
+                //z += amplitude * noise.perlin2(x * frequency, y * frequency);
                 amplitude *= persistence;
                 frequency *= lacunarity;
             }
