@@ -3,4 +3,5 @@ package-lock.json
 yarn.lock
 yarn-error.log
 go/src/src
-go/src/src.wasm
+go/src/*.wasm
+go/src/html/*.wasm
