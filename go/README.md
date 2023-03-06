@@ -23,3 +23,7 @@ Export[4]:
  - func[865] <wasm_export_getsp> -> "getsp"
  - memory[0] -> "mem"
 ```
+
+How manage array with JS and WASM
+- https://rob-blackbourn.github.io/blog/webassembly/wasm/array/arrays/javascript/c/2020/06/07/wasm-arrays.html
+- https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
