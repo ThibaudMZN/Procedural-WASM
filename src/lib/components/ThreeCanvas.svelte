@@ -19,6 +19,7 @@
     });
 
     $: {
+        console.log("Before");
         const start = performance.now();
         const map = generate(
             width,
@@ -30,6 +31,7 @@
             lacunarity
         );
         generationTime = performance.now() - start;
+        console.log("After");
         updateMesh(map);
     }
 </script>
