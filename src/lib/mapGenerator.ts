@@ -1,5 +1,5 @@
 import Perlin from "./perlin";
-import { goPerlin } from "./wasm";
+import { tinygoPerlin } from "./wasm";
 
 export type Mesh = {
     vertices: Float32Array;
@@ -36,19 +36,19 @@ export const generate = (
     const normals = new Float32Array(size);
     const indices = [];
 
-    goPerlin.NewPerlin(42)
+    tinygoPerlin.NewPerlin(42)
 
     for (let x = 0, idx = 0; x <= width; x++) {
         for (let y = 0; y <= height; y++, idx += 3) {
 
             /* Noise */
             // let z = noise.perlin2(x * step, y * step);
-            let z = goPerlin.Perlin(x * step, y*step);
+            let z = tinygoPerlin.Perlin(x * step, y*step);
             let frequency = step;
             let amplitude = maxAmplitude;
 
             for (let i = 0; i < octaveCount; i++) {
-                z += amplitude * goPerlin.Perlin(x * frequency, y * frequency);
+                z += amplitude * tinygoPerlin.Perlin(x * frequency, y * frequency);
                 //z += amplitude * noise.perlin2(x * frequency, y * frequency);
                 amplitude *= persistence;
                 frequency *= lacunarity;

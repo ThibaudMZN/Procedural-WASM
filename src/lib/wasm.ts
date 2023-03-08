@@ -1,26 +1,21 @@
-// import * as WebAssembly from '../../public/wasm_exec.js';
-
+/* Go is declared by wasm_exec.js */
 declare var Go: any;
 
 const go : any = new Go();
 
 export const wasmBrowserInstantiate = async (wasmModuleUrl, importObject) => {
   let response = undefined;
-  console.log("here");
 
   // Check if the browser supports streaming instantiation
   if (WebAssembly.instantiateStreaming) {
     // Fetch the module, and instantiate it as it is downloading
-    console.log("streaming", wasmModuleUrl);
     response = await WebAssembly.instantiateStreaming(
       fetch(wasmModuleUrl),
       importObject
     );
-    console.log(response)
   } else {
     // Fallback to using fetch to download the entire module
     // And then instantiate the module
-    console.log("fetch", wasmModuleUrl);
     const fetchAndInstantiateTask = async () => {
       const wasmArrayBuffer = await fetch(wasmModuleUrl).then(response =>
         response.arrayBuffer()
@@ -29,13 +24,12 @@ export const wasmBrowserInstantiate = async (wasmModuleUrl, importObject) => {
     };
 
     response = await fetchAndInstantiateTask();
-    console.log(response)
   }
 
   return response;
 };
 
-const _goPerlin:any = async() => {
+const _tinygoPerlin:any = async() => {
     // Get the importObject from the go instance.
     const importObject = go.importObject;
 
@@ -48,7 +42,7 @@ const _goPerlin:any = async() => {
     return wasmModule.instance.exports;
 };
 
-const goPerlin: any = await _goPerlin();
+const tinygoPerlin: any = await _tinygoPerlin();
 
-export { goPerlin };
+export { tinygoPerlin };
 
