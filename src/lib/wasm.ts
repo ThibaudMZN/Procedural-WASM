@@ -3,6 +3,7 @@ declare var Go: any;
 
 const go : any = new Go();
 
+/*
 export const wasmBrowserInstantiate = async (wasmModuleUrl, importObject) => {
   let response = undefined;
 
@@ -43,6 +44,12 @@ const _tinygoPerlin:any = async() => {
 };
 
 const tinygoPerlin: any = await _tinygoPerlin();
+*/
+
+const tinygoPerlin = new Object;
+// @ts-nocheck 
+tinygoPerlin.NewPerlin = function(a: number) {}
+tinygoPerlin.Perlin = function(a: number, b: number) { return 0 };
 
 export { tinygoPerlin };
 
