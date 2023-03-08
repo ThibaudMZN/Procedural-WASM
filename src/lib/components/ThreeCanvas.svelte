@@ -4,8 +4,8 @@
     import { createThreeScene, updateMesh } from "../scene";
 
     let canvas: HTMLCanvasElement;
-    let width: number = 100;
-    let height: number = 100;
+    let width: number = 1000;
+    let height: number = 1000;
     let step: number = 20;
     let amplitude: number = 20;
     let octaveCount: number = 2;
