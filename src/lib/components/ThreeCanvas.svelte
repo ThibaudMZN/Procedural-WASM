@@ -29,8 +29,8 @@
             persistence,
             lacunarity
         );
-        updateMesh(map);
         generationTime = performance.now() - start;
+        updateMesh(map);
     }
 </script>
 
